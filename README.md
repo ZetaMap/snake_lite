@@ -1,5 +1,5 @@
 The most small and configurable snake ever (on numworks). <br>
-I used the library called [pymenu](https://my.numworks.com/python/zetamap/pymenu) to make the options menu.
+I used the library called [pymenu](https://github.com/zetamap/pymenu) to make the options menu.
 
 -----
 
