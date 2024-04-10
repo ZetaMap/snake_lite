@@ -12,6 +12,7 @@ def wk(*b):
    if kd(i):
     while kd(i):pass
     return i
+mjust=lambda l,r,s,f=' ': l+f*((s-len(l))//len(f))+r
 class Snake:
  c=["0.95","0.2","#00ff00","green","red","blue","#ffb531","1.0"]
  try:
@@ -26,15 +27,15 @@ class Snake:
  def __init__(s,leader_board=[],speed=10,power=2,size=10,score=1,inf_snake=False,gost=False,darkmode=True,rainbow=False,walls=True):
   if BOOL(inf_snake):power=float("inf")
   if BOOL(darkmode):s.c[0],s.c[1]=s.c[1],s.c[0]
-  s.lb,s.s,s.p,s.m,s.t,s.g,s.go,s.r,s.w=leader_board,1/speed,power,score,size,(320//size-1,220//size-1),BOOL(gost),BOOL(rainbow),BOOL(walls)
+  s.lb,s.s,s.p,s.m,s.t,s.g,s.go,s.r,s.w=leader_board,1/speed,power,score,size,(320//size,220//size),BOOL(gost),BOOL(rainbow),BOOL(walls)
  def nc(s):
-  s.h=[ri(s.w,s.g[i]-s.w)for i in(0,1)]
-  while ENC(s.h[0],s.h[1])in s.b:s.h=[ri(s.w,s.g[i]-s.w)for i in(0,1)]
+  s.h=[ri(s.w,s.g[i]-s.w-1)for i in(0,1)]
+  while ENC(s.h[0],s.h[1])in s.b:s.h=[ri(s.w,s.g[i]-s.w-1)for i in(0,1)]
   fr(s.h[0]*s.t,2+s.h[1]*s.t,s.t,s.t,s.c[4])
  def dl(s):
   fr(0,2,320,220,"0.0")
-  fr(0,2,(s.g[0]+1)*s.t,(s.g[1]+1)*s.t,s.c[5*s.w])
-  if s.w:fr(s.t//2,2+s.t//2,s.g[0]*s.t,s.g[1]*s.t,s.c[0])
+  fr(0,2,s.g[0]*s.t,s.g[1]*s.t,s.c[5*s.w])
+  if s.w:fr(s.t//2,2+s.t//2,(s.g[0]-1)*s.t,(s.g[1]-1)*s.t,s.c[0])
  def dt(s,t,x,y):
   for i,l in enumerate(t.replace('\t',"    ")):
    ds(l,x+10*i,y,s.c[1],s.c[0])
@@ -56,9 +57,9 @@ class Snake:
   elif kd(1)and s.d[1]!=1:s.d=[0,-1]
   elif kd(2)and s.d[1]!=-1:s.d=[0,1]
   elif kd(3)and s.d[0]!=-1:s.d=[1,0]
-  fr(s.e[0]*s.t,2+s.e[1]*s.t,s.t,s.t,[ri(0,255) for _ in(0,1,2)]if s.r else s.c[3])
+  fr(s.e[0]*s.t,2+s.e[1]*s.t,s.t,s.t,s.r and[ri(0,255) for _ in(0,1,2)]or s.c[3])
   for x in range(len(s.b)-1,0,-1):s.b[x]=s.b[x-1]
-  s.b[0]=ENC((s.e[0]+s.d[0])%(s.g[0]+(not s.w)),(s.e[1]+s.d[1])%(s.g[1]+(not s.w)))
+  s.b[0]=ENC((s.e[0]+s.d[0])%s.g[0],(s.e[1]+s.d[1])%s.g[1])
   if s.a>0:
    s.b.append(s.ta[0])
    s.a-=1
@@ -67,12 +68,12 @@ class Snake:
    s.a,s.sc=s.a+s.p,s.sc+s.m
    s.nc()
   s.e=DEC(s.b[0])
-  if not s.go:
-   if s.w and(s.e[0]==s.g[0]or s.e[1]==s.g[1]or s.e[0]==0 or s.e[1]==0):return 0
-   for x in range(1,len(s.b)):
-    if s.b[x]==s.b[0]:return 0
   fr(s.e[0]*s.t,2+s.e[1]*s.t,s.t,s.t,s.c[2])
   ds(str(s.sc),7,7,s.c[1],s.c[0])
+  if not s.go:
+   if s.w and(s.e[0]==s.g[0]-1 or s.e[1]==s.g[1]-1 or s.e[0]==0 or s.e[1]==0):return 0
+   for x in range(1,len(s.b)):
+    if s.b[x]==s.b[0]:return 0
   return 1
  def start(s):
   fr(0,0,320,2,s.c[6])
@@ -89,25 +90,28 @@ class Snake:
       fr(s.h[0]*s.t,2+s.h[1]*s.t,s.t,s.t,s.c[4])
       for i in s.b:
        s.e=DEC(i)
-       fr(s.e[0]*s.t,2+s.e[1]*s.t,s.t,s.t,[ri(0,255)for _ in(0,1,2)]if s.r else s.c[3])
+       fr(s.e[0]*s.t,2+s.e[1]*s.t,s.t,s.t,s.r and[ri(0,255) for _ in(0,1,2)]or s.c[3])
      while mt()-s.mt<s.s:sl(0.01)
     if not s.ub(' '*(3-len(str(s.sc))//2)+"You lose!\tScore: %d"%s.sc,"(OK = Retry, DELETE = Quit)"):break
-   s.e=0
-   s.lb=sorted(s.lb+((s.u,s.sc),),key=lambda v:v[1],reverse=1)
-   print("Your score:",s.sc,"\nLeader board: (default settings)")
+   e,p,s.lb,x,t=0,0,sorted(s.lb+((s.u,s.sc),),key=lambda v:v[1],reverse=1),"Your score:","Leader board:"
+   print(x,s.sc,"\n",t+" (default settings)")
    for i,sc in enumerate(s.lb):
-    if len(sc[0])>s.e:s.e=len(sc[0])
+    if len(sc[0])>e:e=len(sc[0])+len(str(sc[1]))
+    if sc[0]==s.u:p=i
     print(' %d-'%(i+1),sc[0]+':',sc[1])
    fr(0,2,320,220,s.c[0])
-   s.dt("Your score: %d"%s.sc,5,7)
-   s.dt("Leader board:",5,32)
-   for i,sc in enumerate(s.lb):s.dt(sc[0]+':'+' '*(s.e-len(sc[0])+2)+str(sc[1]),60,52+20*i)
-   l=['>'*i+' '*(4-i)+s.lb[0][0]+':'+' '*(s.e-len(s.lb[0][0])+2)+str(s.lb[0][1])+' '*(4-i)+'<'*i for i in range(4)]
+   s.dt(x+" %d"%s.sc,5,7)
+   s.dt(t,5,32)
+   for i,sc in enumerate(s.lb):
+    s.lb[i]=mjust(sc[0]+':',str(sc[1]),e+3)
+    s.dt(s.lb[i],60,52+20*i)
    while not kd(4)and not kd(17):
-    for i in l:
-     sl(0.2)
+    for i in range(4):
      if kd(4)or kd(17):break
-     ds(i,20,52,s.c[6],s.c[0])
+     ds('>'*i+' '*(4-i),20,52,s.c[6],s.c[0])
+     ds(' '*(4-i)+'<'*i,20+(e+1)*16,52,s.c[6],s.c[0])
+     ds(s.lb[p],60,52+20*p,s.c[bool(i%3)*5+1],s.c[0])
+     sl(0.2)
   except KeyboardInterrupt:pass
 class Menu:
  colors=[Snake.c[0],Snake.c[1],"0.38",Snake.c[6],"#2a78e0"]
@@ -183,7 +187,6 @@ def intro(d):
  def pl(letter,x,y,size,color):
   for i,l in enumerate(letter):
    if l=='1':fr(x+size*(i%3),y+size*(i//3),size,size,color)
- def s():raise KeyboardInterrupt
  a,x,ax,r,c,b,o,e='1'*9+"44334411",0,-110,0,Snake.c[6],Menu.r[1],["Play","Options","Quit"],0
  y=ay=120
  fr(0,0,320,222,b)
@@ -211,27 +214,32 @@ def intro(d):
    ds("> "*f+l+f*" <",110+(110-10*(len(l)+4*f))//2,140+i*25,c if f else Menu.r[0],b)
   r=wk(1,2,4,17,52)
   e=(e-1*(r==1)+1*(r==2))%3
-  if r==17:s()
-  if r in(4,52):return[]if e==1 else s()if e==2 else d
+  if r==17:return 1
+  if r in(4,52):return[]if e==1 else 1 if e==2 else d
+def game(*lb):
+ o=[]
+ while not o:
+  o=intro(menu.options())or menu.open()
+  if o==1:return
+ Snake(lb,*o).start()
 
 menu = Menu("Game Settings","Start Game",
  ["Speed",9]+list(range(1,26)),
  ["Power",1]+list(range(1,21)),
- ["Size",9]+list(range(1,51)),
+ ["Snake Size",9]+list(range(1,51)),
  ["Added Score",0]+list(range(1,21)),
  ["Expert Mode",1,"Yes","No"],
- ["Gost Snake",1,"Yes","No"],
+ ["Babu Mode",1,"Yes","No"],
  ["Darkmode",0,"Enabled","Disabled"],
  ["Rainbow",1,"On","Off"],
  ["Walls",0,"Yes","No"]
 )
 
-options=[]
-while not options:options=intro(menu.options())or menu.open()
-Snake((# Leader board: ("name",score),
+game(# Leader board: ("name",score),
   ("Alteur",38),
-  ("ZetaMap",30),
+  ("Lidl Man",37),
+  ("ZetaMap",31),
   ("Nios",23),
   ("Alpha6Frost",17),
 
-),*options).start()
+)
