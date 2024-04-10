@@ -1,21 +1,21 @@
 The most small and configurable snake ever (on numworks). <br>
-I used the library called [pymenu](https://my.numworks.com/python/zetamap/pymenu) to options menu.
+I used the library called [pymenu](https://my.numworks.com/python/zetamap/pymenu) to make the options menu.
 
 -----
 
 ## Features
+* Very VEERRYY small program, only 240 lines and 7KB of storage
 * A leaderboard
-* Configurable game options *(in source code)* :
-  * **speed *[default: 10]***: Speed of snake.
-  * **power *[default: 2]***: Size added after eat a cherry.
-  * **size *[default: 10]***: The size of snake (1 --> 80).
-  * **score *[default: 1]***: Score added after eat a cherry.
-  * **inf_snake *[default: False]***: Snake's body will grow infinitely.
-  * **gost *[default: False]***: Literary a gost, it can eat walls and itself.
-  * **darkmode *[default: True]***: A mode for g@mers.
-  * **rainbow *[default: False]***: Enjoy the rainbow!
-  * **walls *[default: True]***: Enable/Disable walls.
-* A settings menu to change options mentioned above
+* Configurable game options :
+  * **Speed *[default: 10]***: Speed of snake.
+  * **Power *[default: 2]***: Size added after eat a cherry.
+  * **Snake Size *[default: 10]***: The size of snake (1 --> 80).
+  * **Score *[default: 1]***: Score added after eat a cherry.
+  * **Expert Mode *[default: False]***: Snake's body will grow infinitely.
+  * **Babu Mode *[default: False]***: Literary a gost, it can eat walls and itself. 🤣
+  * **Darkmode *[default: True]***: A mode for g@mers.
+  * **Rainbow *[default: False]***: Enjoy the rainbow!
+  * **Walls *[default: True]***: Enable/Disable walls.
 * Dynamic accent color according to OS
 * A start menu to play with default settings
 * Automatic darkmode
